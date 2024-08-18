@@ -1,0 +1,28 @@
+TASK 1: Create a bar chart or histogram to-visualize the distribution of a categorical or continuous variable, such as the distribution of ages or genders in a population.
+Colab Link:https://colab.research.google.com/drive/1XS5nZSEPIbUZDUihlWkTDooyDt_LukRI?usp=sharing
+code:
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset from Seaborn
+df = sns.load_dataset('titanic')
+
+# Drop rows where age or sex is missing
+df = df.dropna(subset=['age', 'sex'])
+
+# Plot a histogram to show the distribution of ages
+plt.figure(figsize=(10, 6))
+sns.histplot(df['age'], bins=20, kde=True, color='blue')
+plt.title('Age Distribution')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.show()
+
+# Plot a bar chart to show the distribution of genders
+plt.figure(figsize=(8, 6))
+sns.countplot(x='sex', data=df, palette='Set2')
+plt.title('Gender Distribution')
+plt.xlabel('Gender')
+plt.ylabel('Count')
+plt.show()
