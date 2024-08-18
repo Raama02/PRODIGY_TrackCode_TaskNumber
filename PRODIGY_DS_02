@@ -1,0 +1,65 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+df = pd.read_csv('/content/Titanic.csv')
+
+# Fill missing 'Age' with the median
+df['Age'].fillna(df['Age'].median(), inplace=True)
+
+# Fill missing 'Embarked' with the most common value (mode)
+df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)
+
+# Create a new feature 'Has_Cabin' and drop the 'Cabin' column
+df['Has_Cabin'] = df['Cabin'].apply(lambda x: 0 if pd.isna(x) else 1)
+df.drop('Cabin', axis=1, inplace=True)
+
+# Convert 'Sex' to numerical values
+df['Sex'] = df['Sex'].map({'male': 0, 'female': 1})
+
+# Convert 'Embarked' to numerical values
+df['Embarked'] = df['Embarked'].map({'S': 0, 'C': 1, 'Q': 2})
+
+# Drop unnecessary columns
+df.drop(['Name', 'Ticket', 'PassengerId'], axis=1, inplace=True)
+
+# Exploratory Data Analysis (EDA)
+
+# Summary statistics
+print(df.describe())
+
+# Distribution of Age
+plt.figure(figsize=(10, 6))
+sns.histplot(df['Age'], bins=20, kde=True, color='blue')
+plt.title('Age Distribution')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.show()
+
+# Survival Rate by Gender
+plt.figure(figsize=(8, 6))
+sns.barplot(x='Sex', y='Survived', data=df, palette='Set2')
+plt.title('Survival Rate by Gender')
+plt.xlabel('Gender (0 = Male, 1 = Female)')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# Survival Rate by Passenger Class
+plt.figure(figsize=(8, 6))
+sns.barplot(x='Pclass', y='Survived', data=df, palette='Set3')
+plt.title('Survival Rate by Passenger Class')
+plt.xlabel('Passenger Class')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# Correlation Matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Matrix')
+plt.show()
+
+# Pairplot for Relationships
+sns.pairplot(df, hue='Survived', palette='Set1')
+plt.suptitle('Pairplot of Features', y=1.02)
+plt.show()
